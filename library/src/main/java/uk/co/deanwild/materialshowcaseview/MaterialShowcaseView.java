@@ -24,6 +24,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
     private boolean mWasDismissed = false;
     private int mShapePadding = ShowcaseConfig.DEFAULT_SHAPE_PADDING;
 
-    private View mContentBox;
+    private LinearLayout mContentBox;
     private TextView mTitleTextView;
     private TextView mContentTextView;
     private TextView mDismissButton;
@@ -118,12 +119,52 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
         setVisibility(INVISIBLE);
 
 
-        View contentView = LayoutInflater.from(getContext()).inflate(R.layout.showcase_content, this, true);
-        mContentBox = contentView.findViewById(R.id.content_box);
-        mTitleTextView = (TextView) contentView.findViewById(R.id.tv_title);
-        mContentTextView = (TextView) contentView.findViewById(R.id.tv_content);
-        mDismissButton = (TextView) contentView.findViewById(R.id.tv_dismiss);
+        //LinearLayout contentView = LayoutInflater.from(getContext()).inflate(R.layout.showcase_content, this, true);
+
+
+        mContentBox = new LinearLayout(getContext());
+        mContentBox.setOrientation(LinearLayout.VERTICAL);
+        int linearLayoutPadding = dpToPixel(16);
+        mContentBox.setPadding(linearLayoutPadding, linearLayoutPadding, linearLayoutPadding, linearLayoutPadding);
+        this.addView(mContentBox);
+
+
+        mTitleTextView = new TextView(getContext());
+        LayoutParams textViewLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        mTitleTextView.setLayoutParams(textViewLayoutParams);
+        mTitleTextView.setTextColor(Color.WHITE);
+        mTitleTextView.setTextSize(dpToPixel(20));
+        mTitleTextView.setPadding(dpToPixel(5), 0, 0, 0);
+        mContentBox.addView(mTitleTextView);
+
+
+        mContentTextView = new TextView(getContext());
+        LayoutParams contentTextViewLayoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+        mContentTextView.setLayoutParams(contentTextViewLayoutParams);
+        mContentTextView.setTextColor(Color.WHITE);
+        mContentTextView.setTextSize(dpToPixel(20));
+        mContentTextView.setPadding(dpToPixel(5), 0, 0, 0);
+        mContentBox.addView(mContentTextView);
+
+
+
+
+
+
+
+
+        mDismissButton = new TextView(getContext());
+        LayoutParams dismissButtonLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+        dismissButtonLayoutParams.topMargin = dpToPixel(20);
+        mDismissButton.setLayoutParams(contentTextViewLayoutParams);
+        mDismissButton.setTextColor(Color.WHITE);
+        mDismissButton.setTextSize(dpToPixel(22));
+        mDismissButton.setPadding(dpToPixel(5), dpToPixel(10), dpToPixel(5), dpToPixel(10));
         mDismissButton.setOnClickListener(this);
+        mDismissButton.setClickable(true);
+        mDismissButton.setVisibility(GONE);
+        mContentBox.addView(mDismissButton);
+
     }
 
 
@@ -885,5 +926,11 @@ public class MaterialShowcaseView extends FrameLayout implements View.OnTouchLis
 
     private void setRenderOverNavigationBar(boolean mRenderOverNav) {
         this.mRenderOverNav = mRenderOverNav;
+    }
+
+    private int dpToPixel(int dp)
+    {
+        float scale = getResources().getDisplayMetrics().density;
+        return (int) (dp * scale + 0.5f);
     }
 }
